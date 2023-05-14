@@ -82,7 +82,7 @@ export const getAttendanceController = async (req, res) => {
             userAttendance: {
               $push: {
                 date: {$dateToString: {
-                  format: "%d/%m/%Y",
+                  format: "%Y/%m/%d",
                   date: "$Date"
                 }},
                 createdAs: "$createdAs",

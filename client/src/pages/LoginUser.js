@@ -21,7 +21,7 @@ function LoginUser() {
   };
 
   if (isAuthenticated) {
-    Navigate("/register-user");
+    Navigate("/attendance");
     return null;
   }
 

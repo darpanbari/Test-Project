@@ -9,7 +9,6 @@ function AllUsers() {
   const [toDate, setToDate] = useState("");
   const [locationId, setLocationId] = useState("");
 
-  const dispatch = useDispatch();
   const attendance = useSelector(
     (state) => state.attendanceState.attendance.data || []
   );
@@ -19,6 +18,7 @@ function AllUsers() {
     dispatch(getAttendance({ fromDate, toDate, locationId }));
   };
 
+  const dispatch = useDispatch();
   //get location
   const location = useSelector((state) => state?.locationState?.location?.data);
   console.log(location);
@@ -28,28 +28,36 @@ function AllUsers() {
   }, [dispatch]);
 
   const dateArr = [
-    "01/05/2023",
-    "02/05/2023",
-    "03/05/2023",
-    "04/05/2023",
-    "05/05/2023",
-    "06/05/2023",
-    "07/05/2023",
-    "08/05/2023",
-    "09/05/2023",
-    "10/05/2023",
+    "2023-05-01",
+    "2023-05-02",
+    "2023-05-03",
+    "2023-05-04",
+    "2023-05-05",
+    "2023-05-06",
+    "2023-05-07",
+    "2023-05-08",
+    "2023-05-09",
+    "2023-05-10",
   ];
+
+  const filteredDates = dateArr.filter((date) => {
+    const selectedDate = new Date(date);
+    const fromDateObj = new Date(fromDate);
+    const toDateObj = new Date(toDate);
+    console.log(selectedDate)
+    return fromDateObj <= selectedDate && selectedDate <= toDateObj;
+  });
 
   return (
     <>
-      <div className="container-fluid dashboard" >
+      <div className="container-fluid dashboard">
         <div className="row">
           <div className="col-lg-2 col-md-7 justify-content-center dash-position">
             <Nav />
           </div>
           <div
             className="col-lg-10 col-md-6 bg-white shadow-sm my-5 dash w-75 margin"
-            style={{ marginLeft: "20%", background:"#F2F8FF" }}
+            style={{ marginLeft: "20%", background: "#F2F8FF" }}
           >
             <h1 className="text-center mt-5 fst-italic text-white bgcolor-2 py-4">
               Monthly Attendance
@@ -96,7 +104,7 @@ function AllUsers() {
                     ))}
                   </select>
                 </div>
-                <button className="w-75" onClick={handleGetAttendance}>
+                <button className="w-75 bgcolor-2 text-white" onClick={handleGetAttendance}>
                   Get Attendance
                 </button>
               </div>
@@ -112,7 +120,7 @@ function AllUsers() {
                         </th>
                         <th scope="col">FullName</th>
                         <th scope="col">Location</th>
-                        {dateArr.map((a, i) => (
+                        {filteredDates.map((a, i) => (
                           <th key={i} scope="col">
                             {new Date(a).toLocaleDateString()}
                           </th>
@@ -127,18 +135,14 @@ function AllUsers() {
                           <td>{u.userFullName}</td>
                           <td>{u.Location}</td>
 
-                          {dateArr.map((dateStr, j) => {
-                            const date = new Date(dateStr);
-                            const formattedDate = date.toLocaleDateString();
+                          {filteredDates.map((dateStr, j) => {
+                            const date = new Date(dateStr).toLocaleDateString();
                             const aSts = u.userAttendance.find(
                               (a) =>
-                                new Date(a.date).toLocaleDateString() ===
-                                formattedDate
+                                new Date(a.date).toLocaleDateString() === date
                             );
                             return (
-                              <td key={j}>
-                               {aSts ? aSts.createdAs : "A"}
-                              </td>
+                              <td key={j}>{aSts ? aSts.createdAs : "A"}</td>
                             );
                           })}
                         </tr>
